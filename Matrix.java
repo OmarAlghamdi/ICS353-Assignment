@@ -32,7 +32,24 @@ public class Matrix{
                     b[i][j] = x++;
         long[][] c = iterative(a, b, n);
         print(c);
-
+        print(matrixPadding(c, n));
     }
-
+    public static long[][] matrixPadding(long [][] a, int n){
+        // & is a bitwise and operation opration
+        if(n > 0 && (n & (n - 1)) == 0)
+            return a;
+        else{
+            int m =1;
+            while(m < n)
+                // left shift
+                m <<= 1;
+            long[][] b = new long[m][m];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    b[i][j] = a [i][j];
+                }
+            }
+            return b;
+        }
+    }
 }

@@ -1,3 +1,9 @@
+# vscode files
+.vscode/*
+
+# c files
+Matrix.c
+
 # Text Files
 *.txt
 

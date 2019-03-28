@@ -17,7 +17,7 @@ public class Matrix{
         System.out.println("------xxxxxxxxxx------");
         print(b);
         System.out.println("======================");
-        long[][] strassenc = strassen(a, b, 4);  // Apply strassen - asaad
+        long[][] strassenc = strassen(a, b, 4, n);  // Apply strassen - asaad
         print(strassenc);
        // print(matrixPadding(c, n)); // No need!
     
@@ -77,9 +77,9 @@ public class Matrix{
         }
     }
     // NOTE: it is not efficint to add & subtract m1..m7 during multiplcation step
-    public static long[][] strassen(long[][] a, long[][] b, int base){
+    public static long[][] strassen(long[][] a, long[][] b, int base, int n){
         // TODO define base case flow
-        int n = a.length;
+        
         if(n <= base){
             return iterative(a, b, n);
         }
@@ -87,8 +87,8 @@ public class Matrix{
 
         a = matrixPadding(a, n);    // Padding applied if needed to a and b.
         b = matrixPadding(b, n);
-        n = a.length;
-        int m = n/2;        // Divide the array into two halves. 
+        
+        int m = a.length/2;        // Divide the array into two halves. 
         // NOTE: Trying n/2 yields incorrect division. MIGHT NOT NEED n as a parameter
         long[][] a11, a12, a21, a22;    
         long[][] b11, b12, b21, b22;
@@ -111,7 +111,7 @@ public class Matrix{
         b21 = new long[m][m]; b22 = new long[m][m];
         c11 = new long[m][m]; c12 = new long[m][m];
         c21 = new long[m][m]; c22 = new long[m][m];
-        c = new long[n][n];
+        c = new long[a.length][a.length];
 
         
         // TODO partition into 4 Regions, A B C
@@ -167,13 +167,13 @@ public class Matrix{
         s9 = matrixSubtraction(a11, a21);
         s10 = matrixAddition(b11, b12);
 
-        m1 = strassen(a11, s1, base);
-        m2 = strassen(s2, b22, base);
-        m3 = strassen(s3, b11, base);
-        m4 = strassen(a22, s4, base);
-        m5 = strassen(s5, s6, base);
-        m6 = strassen(s7, s8, base);
-        m7 = strassen(s9, s10, base);
+        m1 = strassen(a11, s1, base, m);
+        m2 = strassen(s2, b22, base, m);
+        m3 = strassen(s3, b11, base, m);
+        m4 = strassen(a22, s4, base, m);
+        m5 = strassen(s5, s6, base, m);
+        m6 = strassen(s7, s8, base, m);
+        m7 = strassen(s9, s10, base, m);
 
 
         c11 = matrixAddition(matrixSubtraction(matrixAddition(m5, m4), m2), m6);
@@ -204,7 +204,7 @@ public class Matrix{
         }
 
         
-        return c;
+        return trim(c, n);
     }
 
     public static long[][] matrixAddition(long[][] a, long[][] b){
@@ -228,5 +228,14 @@ public class Matrix{
             }
         }
         return c;
+    }
+    public static long[][] trim(long[][] c, int n){
+        long[][] tc = new long[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                tc[i][j] = c[i][j];
+            }
+        }
+        return tc;
     }
 }

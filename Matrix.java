@@ -12,8 +12,8 @@ public class Matrix{
                 for (int j = 0; j < n; j++) 
                     b[i][j] = x++;
 
-        //long[][] c = iterative(a, b, n);    // Apply the iterative multiplication - asaad
         long[][] strassenc = strassen(a, b, 4, n);  // Apply strassen - asaad
+        print(strassenc);
     }
 
     public static long[][] iterative(long[][] a, long[][] b, int n){
@@ -69,20 +69,16 @@ public class Matrix{
             return b;
         }
     }
-    // NOTE: it is not efficint to add & subtract m1..m7 during multiplcation step
     public static long[][] strassen(long[][] a, long[][] b, int base, int n){
-        // TODO define base case flow
         
         if(n <= base){
             return iterative(a, b, n);
         }
         
-
         a = matrixPadding(a, n);    // Padding applied if needed to a and b.
         b = matrixPadding(b, n);
         
         int m = a.length/2;        // Divide the array into two halves. 
-        // NOTE: Trying n/2 yields incorrect division. MIGHT NOT NEED n as a parameter
         long[][] a11, a12, a21, a22;    
         long[][] b11, b12, b21, b22;
         long[][] s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
@@ -106,8 +102,7 @@ public class Matrix{
         c21 = new long[m][m]; c22 = new long[m][m];
         c = new long[a.length][a.length];
 
-        
-        // TODO partition into 4 Regions, A B C
+        // partition into 4 Regions
         for(int i=0;i<m;i++){
             for(int j=0;j<m;j++){
             a11[i][j] = a[i][j];
@@ -115,7 +110,6 @@ public class Matrix{
             a21[i][j] = a[(m)+i][j];
             a22[i][j] = a[(m)+i][(m)+j];
             }
-
         }
         for(int i=0;i<m;i++){
             for(int j=0;j<m;j++){
@@ -124,16 +118,9 @@ public class Matrix{
             b21[i][j] = b[(m)+i][j];
             b22[i][j] = b[(m)+i][(m)+j];
             }
-
         }
 
-        
-
-
-
-
-        //// DIVIDE STEP
-
+        // doing add/dub opertations to avoid redundency
         s1 = matrixSubtraction(b12, b22);
         s2 = matrixAddition(a11, a12);
         s3 = matrixAddition(a21, a22);
@@ -144,7 +131,8 @@ public class Matrix{
         s8 = matrixAddition(b21, b22);
         s9 = matrixSubtraction(a11, a21);
         s10 = matrixAddition(b11, b12);
-
+        
+        // DIVIDE STEP
         m1 = strassen(a11, s1, base, m);
         m2 = strassen(s2, b22, base, m);
         m3 = strassen(s3, b11, base, m);
@@ -153,16 +141,12 @@ public class Matrix{
         m6 = strassen(s7, s8, base, m);
         m7 = strassen(s9, s10, base, m);
 
-
         c11 = matrixAddition(matrixSubtraction(matrixAddition(m5, m4), m2), m6);
         c12 = matrixAddition(m1, m2);
         c21 = matrixAddition(m3, m4);
         c22 = matrixSubtraction(matrixSubtraction(matrixAddition(m5, m1), m3), m7);
 
-
-
-
-
+        // combine the solution
         for(int i=0;i<c11.length;i++){
             for(int j=0;j<c11.length;j++){
                 c[i][j] = c11[i][j];
@@ -172,8 +156,7 @@ public class Matrix{
 
             }
         }
-
-        
+        // return the result in the original size
         return trim(c, n);
     }
 

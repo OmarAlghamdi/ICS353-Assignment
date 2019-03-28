@@ -13,14 +13,7 @@ public class Matrix{
                     b[i][j] = x++;
 
         //long[][] c = iterative(a, b, n);    // Apply the iterative multiplication - asaad
-        print(a);
-        System.out.println("------xxxxxxxxxx------");
-        print(b);
-        System.out.println("======================");
         long[][] strassenc = strassen(a, b, 4, n);  // Apply strassen - asaad
-        print(strassenc);
-       // print(matrixPadding(c, n)); // No need!
-    
     }
 
     public static long[][] iterative(long[][] a, long[][] b, int n){
@@ -133,22 +126,7 @@ public class Matrix{
             }
 
         }
-        print(a11);
-        System.out.println("======================");
-        print(a12);
-        System.out.println("======================");
-        print(a21);
-        System.out.println("======================");
-        print(a22);
-        System.out.println("======================");
-        print(b11);
-        System.out.println("======================");
-        print(b12);
-        System.out.println("======================");
-        print(b21);
-        System.out.println("======================");
-        print(b22);
-        System.out.println("======================");
+
         
 
 
@@ -181,14 +159,6 @@ public class Matrix{
         c21 = matrixAddition(m3, m4);
         c22 = matrixSubtraction(matrixSubtraction(matrixAddition(m5, m1), m3), m7);
 
-        print(c11);
-        System.out.println("======================");
-        print(c12);
-        System.out.println("======================");
-        print(c21);
-        System.out.println("======================");
-        print(c22);
-        System.out.println("======================");
 
 
 

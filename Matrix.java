@@ -16,7 +16,7 @@ public class Matrix{
         print(a);
         System.out.println("------xxxxxxxxxx------");
         print(b);
-        System.out.println("======================")
+        System.out.println("======================");
         long[][] strassenc = strassen(a, b, 4);  // Apply strassen - asaad
         print(strassenc);
        // print(matrixPadding(c, n)); // No need!
@@ -80,24 +80,28 @@ public class Matrix{
     public static long[][] strassen(long[][] a, long[][] b, int base){
         // TODO define base case flow
         int n = a.length;
-        if(n < base){
+        if(n <= base){
             return iterative(a, b, n);
-            
-
         }
+        
 
         a = matrixPadding(a, n);    // Padding applied if needed to a and b.
         b = matrixPadding(b, n);
-
+        n = a.length;
         int m = n/2;        // Divide the array into two halves. 
         // NOTE: Trying n/2 yields incorrect division. MIGHT NOT NEED n as a parameter
         long[][] a11, a12, a21, a22;    
         long[][] b11, b12, b21, b22;
+        long[][] s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
         long[][] m1, m2, m3, m4, m5, m6, m7;
         long[][] c11, c12, c21, c22;
         long[][] c;
 
         // initalizations
+        s1 = new long[m][m]; s2 = new long[m][m]; s3 = new long[m][m];
+        s4 = new long[m][m]; s5 = new long[m][m]; s6 = new long[m][m];
+        s7 = new long[m][m]; s8 = new long[m][m]; s9 = new long[m][m];
+        s10 = new long[m][m];
         m1 = new long[m][m]; m2 = new long[m][m]; m3 = new long[m][m];
         m4 = new long[m][m]; m5 = new long[m][m]; m6 = new long[m][m];
         m7 = new long[m][m];
@@ -129,26 +133,66 @@ public class Matrix{
             }
 
         }
-
+        print(a11);
+        System.out.println("======================");
+        print(a12);
+        System.out.println("======================");
+        print(a21);
+        System.out.println("======================");
+        print(a22);
+        System.out.println("======================");
+        print(b11);
+        System.out.println("======================");
+        print(b12);
+        System.out.println("======================");
+        print(b21);
+        System.out.println("======================");
+        print(b22);
+        System.out.println("======================");
         
 
 
 
 
         //// DIVIDE STEP
-        m1 = strassen(matrixAddition(a11, a22), matrixAddition(b11, b22), base);
-        m2 = strassen(matrixAddition(a21, a22), b11, base);
-        m3 = strassen(a11, matrixSubtraction(b12, b22), base);
-        m4 = strassen(a22, matrixSubtraction(b21, b11), base);
-        m5 = strassen(matrixAddition(a11, a12), b22, base);
-        m6 = strassen(matrixSubtraction(a21, a11), matrixAddition(b11, b12), base);
-        m7 = strassen(matrixSubtraction(a12, a22), matrixAddition(b21, b22), base);
+
+        s1 = matrixSubtraction(b12, b22);
+        s2 = matrixAddition(a11, a12);
+        s3 = matrixAddition(a21, a22);
+        s4 = matrixSubtraction(b21, b11);
+        s5 = matrixAddition(a11, a22);
+        s6 = matrixAddition(b11, b22);
+        s7 = matrixSubtraction(a12, a22);
+        s8 = matrixAddition(b21, b22);
+        s9 = matrixSubtraction(a11, a21);
+        s10 = matrixAddition(b11, b12);
+
+        m1 = strassen(a11, s1, base);
+        m2 = strassen(s2, b22, base);
+        m3 = strassen(s3, b11, base);
+        m4 = strassen(a22, s4, base);
+        m5 = strassen(s5, s6, base);
+        m6 = strassen(s7, s8, base);
+        m7 = strassen(s9, s10, base);
 
 
-        c11 = matrixSubtraction(matrixAddition(m1, m4), matrixAddition(m5, m7));
-        c12 = matrixAddition(m3, m5);
-        c21 = matrixAddition(m2, m4);
-        c22 = matrixSubtraction(matrixAddition(m1, m3), matrixAddition(m2, m6));
+        c11 = matrixAddition(matrixSubtraction(matrixAddition(m5, m4), m2), m6);
+        c12 = matrixAddition(m1, m2);
+        c21 = matrixAddition(m3, m4);
+        c22 = matrixSubtraction(matrixSubtraction(matrixAddition(m5, m1), m3), m7);
+
+        print(c11);
+        System.out.println("======================");
+        print(c12);
+        System.out.println("======================");
+        print(c21);
+        System.out.println("======================");
+        print(c22);
+        System.out.println("======================");
+
+
+
+
         for(int i=0;i<c11.length;i++){
             for(int j=0;j<c11.length;j++){
                 c[i][j] = c11[i][j];

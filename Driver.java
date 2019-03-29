@@ -17,9 +17,9 @@ public class Driver{
         y = m[1];
         long startTime = System.nanoTime();
         if(t == 0)
-            ;// call iterativa on x & y then store resutlt in z
+            z = Matrix.iterative(x, y, n);
         else
-            ;// call Strassen's on x & y then store resutlt in z
+            z = Matrix.strassen(x, y, b, n);
         long endTime = System.nanoTime();
 
         write(output, z, n, convertTime(startTime, endTime));

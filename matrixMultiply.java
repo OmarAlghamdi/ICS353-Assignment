@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class matrixMultiply{
+    // matrixMultiply opcode n base inputfilename outputfilename
+    // NOTE: input file name must conform to the requirement in the project document
+    // NOTE2: By project document definition, opcode = 0 -> iterative, opcode = 1 -> strassen
     public static void main(String[] args) {
         try{
         // Input checks: assume a sensible user that inputs proper input values. We could do
@@ -239,10 +242,9 @@ public class matrixMultiply{
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
                 writer.print(c[i][j]);
-                if(j!=n-1)
-                    writer.print(" ");
+                if(j!=n-1) writer.print(" ");
             }
-            writer.println();
+            if(i!=n-1) writer.println();
             writer.flush(); // By using flush, the matrix will be written line by line.
         }
     }

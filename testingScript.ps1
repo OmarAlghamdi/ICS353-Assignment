@@ -3,7 +3,7 @@ param([string]$inputDir, [string]$resultDir)
 function iterative
 {
     param([string]$fileName, [int32]$n)
-    & java.exe Driver 0 $n 0 $inputDir/$fileName $resultDir/"iterative-$fileName"
+    & java.exe Driver 0 $n 0 $inputDir/$fileName $resultDir/"iterative-1-$fileName"
 }
 function Strassen
 {

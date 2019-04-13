@@ -24,14 +24,14 @@ public class matrixMultiply{
                 sb.append("Iter,");
                 sb.append("Stras,");
                 sb.append("base");
-                sb.append("/n");
+                sb.append('\n');
                 writer.write(sb.toString());
                 writer.flush();
                 sb.setLength(0);
                 // Write the CSV headers and clear the stringbuilder - asaad
 
                 for(int i=0;i<1000;i++){    // 1000 Iterations, and we iterate 10 times per iteration 
-                System.out.println(i);
+                System.out.println("\n"+i+":");
                 Random r = new Random();    // for each algorithm to take the average time.
                 int n = r.nextInt(4000-30+1) + 30;
                 int b = 64;
@@ -43,6 +43,7 @@ public class matrixMultiply{
                 int[] bases = new int[]{64, 256, 512};
                 b = bases[r.nextInt(bases.length)];
                 while(j > 0){
+                System.out.print(j+"\t");
                 long startT = System.nanoTime();
                 iterative(matA, matB, n);
                 long endT = System.nanoTime();
@@ -62,7 +63,7 @@ public class matrixMultiply{
                 sb.append(strassenTime/10);
                 sb.append(",");
                 sb.append(b);
-                sb.append("/n");
+                sb.append('\n');
                 writer.write(sb.toString());
                 writer.flush();
                 sb.setLength(0);

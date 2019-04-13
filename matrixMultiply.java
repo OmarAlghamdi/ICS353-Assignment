@@ -1,8 +1,12 @@
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.lang.IllegalArgumentException;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
 
 public class matrixMultiply{
     // matrixMultiply opcode n base inputfilename outputfilename
@@ -10,8 +14,67 @@ public class matrixMultiply{
     // NOTE2: By project document definition, opcode = 0 -> iterative, opcode = 1 -> strassen
     public static void main(String[] args) {
         try{
+
         // Input checks: assume a sensible user that inputs proper input values. We could do
         // input checks though. I am only checking for the number of arguments though
+        if(args.length == 1){
+            try(PrintWriter writer = new PrintWriter(new File(args[0]))){
+                StringBuilder sb = new StringBuilder();
+                sb.append("n,");
+                sb.append("Iter,");
+                sb.append("Stras,");
+                sb.append("base");
+                sb.append("/n");
+                writer.write(sb.toString());
+                writer.flush();
+                sb.setLength(0);
+                // Write the CSV headers and clear the stringbuilder - asaad
+
+                for(int i=0;i<1000;i++){    // 1000 Iterations, and we iterate 10 times per iteration 
+                System.out.println(i);
+                Random r = new Random();    // for each algorithm to take the average time.
+                int n = r.nextInt(4000-30+1) + 30;
+                int b = 64;
+                long[][] matA, matB;
+                matA = generateMatrix(n);
+                matB = generateMatrix(n);
+                int j = 10;
+                long iterativeTime = 0; long strassenTime = 0;
+                int[] bases = new int[]{64, 256, 512};
+                b = bases[r.nextInt(bases.length)];
+                while(j > 0){
+                long startT = System.nanoTime();
+                iterative(matA, matB, n);
+                long endT = System.nanoTime();
+                iterativeTime = iterativeTime + (endT - startT);
+    
+                startT = System.nanoTime();
+
+                strassen(matA, matB, b, n);
+                endT = System.nanoTime();
+                strassenTime = strassenTime + (endT - startT);
+                j--;
+                }
+                sb.append(n);
+                sb.append(",");
+                sb.append(iterativeTime/10);
+                sb.append(",");
+                sb.append(strassenTime/10);
+                sb.append(",");
+                sb.append(b);
+                sb.append("/n");
+                writer.write(sb.toString());
+                writer.flush();
+                sb.setLength(0);
+            }
+            
+            
+            
+            }catch (IOException e) {System.out.println(e);}
+ 
+
+
+        }
         if(args.length < 5){
             throw new IllegalArgumentException("Insufficient Arguments");
             
@@ -248,4 +311,15 @@ public class matrixMultiply{
             writer.flush(); // By using flush, the matrix will be written line by line.
         }
     }
+    public static long[][] generateMatrix(int n) {
+        
+		long[][] matrix = new long[n][n];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				matrix[i][j] = (java.util.concurrent.ThreadLocalRandom.current().nextLong(101)*(Math.round(Math.random()))*(-1));
+			}
+		}
+		return matrix;
+}
 }

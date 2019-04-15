@@ -6,7 +6,7 @@
 * push
 * merge to this repo to the master
 # How to use
-* compile Driver.java
+* compile matrixMultiply.java
 * to generate test matrices run generateTestFiles script. it takes four arguments
     * -minSize: the smallest test matrix size
     * -macSize: the largest test matrix size

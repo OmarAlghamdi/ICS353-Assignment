@@ -1,4 +1,113 @@
-public class Matrix{
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.lang.IllegalArgumentException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+
+public class matrixMultiply{
+    // matrixMultiply opcode n base inputfilename outputfilename
+    // NOTE: input file name must conform to the requirement in the project document
+    // NOTE2: By project document definition, opcode = 0 -> iterative, opcode = 1 -> strassen
+    public static void main(String[] args) {
+        try{
+
+        // Input checks: assume a sensible user that inputs proper input values. We could do
+        // input checks though. I am only checking for the number of arguments though
+        if(args.length == 1){
+            try(PrintWriter writer = new PrintWriter(new File(args[0]))){
+                StringBuilder sb = new StringBuilder();
+                sb.append("n,");
+                sb.append("Iter,");
+                sb.append("Stras,");
+                sb.append("base");
+                sb.append('\n');
+                writer.write(sb.toString());
+                writer.flush();
+                sb.setLength(0);
+                // Write the CSV headers and clear the stringbuilder - asaad
+
+                for(int i=0;i<1000;i++){    // 1000 Iterations, and we iterate 10 times per iteration 
+                System.out.println("\n"+i+":");
+                Random r = new Random();    // for each algorithm to take the average time.
+                int n = r.nextInt(4000-30+1) + 30;
+                int b = 64;
+                long[][] matA, matB;
+                matA = generateMatrix(n);
+                matB = generateMatrix(n);
+                int j = 10;
+                long iterativeTime = 0; long strassenTime = 0;
+                int[] bases = new int[]{64, 256, 512};
+                b = bases[r.nextInt(bases.length)];
+                while(j > 0){
+                System.out.print(j+"\t");
+                long startT = System.nanoTime();
+                iterative(matA, matB, n);
+                long endT = System.nanoTime();
+                iterativeTime = iterativeTime + (endT - startT);
+    
+                startT = System.nanoTime();
+
+                strassen(matA, matB, b, n);
+                endT = System.nanoTime();
+                strassenTime = strassenTime + (endT - startT);
+                j--;
+                }
+                sb.append(n);
+                sb.append(",");
+                sb.append(iterativeTime/10);
+                sb.append(",");
+                sb.append(strassenTime/10);
+                sb.append(",");
+                sb.append(b);
+                sb.append('\n');
+                writer.write(sb.toString());
+                writer.flush();
+                sb.setLength(0);
+            }
+            
+            
+            
+            }catch (IOException e) {System.out.println(e);}
+ 
+
+
+        }
+        if(args.length < 5){
+            throw new IllegalArgumentException("Insufficient Arguments");
+            
+        }
+        
+        int optype = Integer.parseInt(args[0]);
+        int n = Integer.parseInt(args[1]);
+        int base = Integer.parseInt(args[2]);
+        String inputf = args[3];
+        String outputf = args[4];
+        // TEMP INPUT GENERATION DISABLED - USE TEXTFILES
+        // int x = 1;
+        // long[][] a = new long[n][n];
+        // long[][] b = new long[n][n];       // Defined two test nxn test matrices - asaad 
+        
+        // while(x <= 25)      
+        //     for (int i = 0; i < n; i++)
+        //         for (int j = 0; j < n; j++) //populate matrix a until (n^2)th element - asaad
+        //             a[i][j] = x++;
+        // while(x <= 50)          // same
+        //     for (int i = 0; i < n; i++) 
+        //         for (int j = 0; j < n; j++) 
+        //             b[i][j] = x++;
+    Scanner fr = new Scanner(new File(inputf)); 
+    switch(optype){
+    case 0: exportMatrix(iterative(readMatrix(fr, n), readMatrix(fr, n), n), outputf, n);  break;
+    case 1: exportMatrix(strassen(readMatrix(fr, n), readMatrix(fr, n), base, n), outputf, n); break;
+    default: break;
+    }
+    }catch(IllegalArgumentException e){System.out.println(e);}
+    catch(FileNotFoundException e){System.out.println(e);}
+    }
 
     public static long[][] iterative(long[][] a, long[][] b, int n){
         long[][] c = new long[n][n];    // resultant matrix.. ok. - asaad
@@ -175,4 +284,43 @@ public class Matrix{
         }
         return tc;
     }
+    public static long[][] readMatrix(Scanner fr, int n){
+        // Assuming that the input file follows the format where:
+        // The first n digits separated by a single whitespace belong to matrix A
+        // The last n digits separated by a single whitespace belong to matrix B
+        // NOTE: A scanner was supplied as an input parameter due to the fact we
+        // need to continute reading from where we stopped after returning the matrix A.
+        long[][] c = new long[n][n];
+        for(int i = 0;i<n;i++){
+            for(int j = 0;j<n;j++){
+                if(fr.hasNextLong()){
+                c[i][j] = fr.nextLong();
+                }
+            }
+
+        }
+        return c;
+    }
+    public static void exportMatrix(long[][] c, String filename, int n) throws FileNotFoundException{
+        PrintWriter writer = new PrintWriter(filename);
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                writer.print(c[i][j]);
+                if(j!=n-1) writer.print(" ");
+            }
+            if(i!=n-1) writer.println();
+            writer.flush(); // By using flush, the matrix will be written line by line.
+        }
+    }
+    public static long[][] generateMatrix(int n) {
+        
+		long[][] matrix = new long[n][n];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				matrix[i][j] = (java.util.concurrent.ThreadLocalRandom.current().nextLong(101)*(Math.round(Math.random()))*(-1));
+			}
+		}
+		return matrix;
+}
 }
